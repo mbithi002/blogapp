@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from "react-router-dom"
 import appwriteService from '../appwrite/config'
 import Button from '../components/Button'
-import Container from '../components/container'
+import Container from '../components/container/Container'
 
 function Post() {
   const [post, setPost] = useState(null)

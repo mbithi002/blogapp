@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import appwriteServices from '../appwrite/config'
 import PostCard from '../components/PostCard'
-import Container from '../components/container'
+import Container from '../components/container/Container'
+// import Container from '../components/container'
 
 function Home() {
   const [posts, setPosts] = useState([])
@@ -17,8 +18,8 @@ function Home() {
     return (
       <div className="w-full py-8">
       <Container>
-        <div className="flex flex-wrap">
-          <h1 className="text-center text-color-blue animate-bounce">Login to read posts</h1>
+        <div className="flex flex-wrap mx-auto">
+          <h1 className="text-center text-color-blue animate-bounce text-white">No posts Yet</h1>
         </div>
       </Container>
     </div>

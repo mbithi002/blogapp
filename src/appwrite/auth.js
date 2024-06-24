@@ -1,4 +1,4 @@
-import { Account, Client } from "appwrite";
+import { Account, Client, ID } from "appwrite";
 import conf from "../conf/conf";
 
 export class AuthService {
@@ -6,9 +6,9 @@ export class AuthService {
   account;
 
   constructor() {
-    this.Client.setEndpoint(conf.appwriteUrl).setProject(
-      conf.appwriteProjectId
-    );
+    this.client
+      .setEndpoint(conf.appwriteUrl)
+      .setProject(conf.appwriteProjectId);
     this.account = new Account(this.client);
   }
 
@@ -21,38 +21,44 @@ export class AuthService {
         name
       );
       if (userAccount) {
-        return this.login(email, password);
+        return await this.login(email, password);
       } else {
-        throw error;
+        throw new Error("Account creation failed");
       }
     } catch (error) {
+      console.error("AuthService :: createAccount() ::", error);
       throw error;
     }
   }
-  async login(email, password) {
+
+  async login({ email, password }) {
     try {
-      return await this.account.createEmailSession(email, password);
+      const response = await this.account.createEmailPasswordSession(email, password);
+      console.log("Login successful", response);
+      return response;
     } catch (error) {
+      console.error("Error during login", error);
       throw error;
     }
   }
+
   async getCurrentUser() {
     try {
       return await this.account.get();
     } catch (error) {
-      console.log("Appwrite service :: getCurrentUser() :: ", error);
+      console.error("Appwrite service :: getCurrentUser() ::", error);
+      throw error;
     }
-    return null;
   }
+
   async logout() {
     try {
       await this.account.deleteSessions();
     } catch (error) {
-      console.log("Appwrite service :: logout() :: ", error);
+      console.error("Appwrite service :: logout() ::", error);
     }
   }
 }
-
 const authService = new AuthService();
 
 export default authService;

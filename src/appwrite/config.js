@@ -31,7 +31,7 @@ export class Service {
     try {
       return await this.databases.listDocuments(
         conf.appwriteDatabaseId,
-        cnof.appwriteCollectionId,
+        conf.appwriteCollectionId,
         queries
       );
     } catch (error) {
@@ -45,6 +45,7 @@ export class Service {
       return await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectionId,
+        ID.unique(),
         slug,
         {
           title,
@@ -55,10 +56,11 @@ export class Service {
         }
       );
     } catch (error) {
-      console.log("Appwrite service :: createPosts() :: ", error);
+      console.log("Appwrite service :: createPost() :: ", error);
       return false;
     }
   }
+  
 
   async updatePost(slug, { title, content, featuredImage, status }) {
     try {
