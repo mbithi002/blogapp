@@ -31,17 +31,39 @@ export class AuthService {
     }
   }
 
-  async login({ email, password }) {
+  async login(email, password) {
     try {
-      const response = await this.account.createEmailPasswordSession(email, password);
-      console.log("Login successful", response);
-      return response;
+      const currentUser = await this.getCurrentUser();
+      if (currentUser) {
+        // console.log("Appwriteservice :: login() :: Session already active for", currentUser);
+        return currentUser;
+      } else {
+        const res = await this.account.createEmailPasswordSession(
+          email,
+          password
+        );
+        res
+          ? console.log("login success", res)
+          : console.log("failed to login", res);
+        return res;
+      }
     } catch (error) {
-      console.error("Error during login", error);
-      throw error;
+      if (error.code === 401) {
+        // If no session exists
+        const res = await this.account.createEmailPasswordSession(
+          email,
+          password
+        );
+        res
+          ? console.log("login success", res)
+          : console.log("failed to login", res);
+        return res;
+      } else {
+        console.log("Appwriteservice :: login() :: ", error);
+        throw error;
+      }
     }
   }
-
   async getCurrentUser() {
     try {
       return await this.account.get();
